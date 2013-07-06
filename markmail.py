@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
+import datetime
 
 # LinkedMarkMail, an RDFizer for Mark Mail 
 #
@@ -30,13 +31,16 @@ Futher details at: http://pastebin.com/M5NnyEZ8
 import urllib2
 import simplejson as json
 from StringIO import StringIO
+from datetime import datetime, timedelta
+import re
 #import warnings
 
 class MarkMail:
 
     def __init__(self, base="http://markmail.org"):
         self.base = base
-
+        self.p_yesterday = re.compile('^yesterday.*', re.IGNORECASE)
+        
     def search(self, query, page=1, mode="json"):
         uri = "%s/results.xqy?q=%s&page=%d&mode=%s" % (self.base, query, page, mode)
         response = self.__request(uri).read()
@@ -61,8 +65,44 @@ class MarkMail:
         thread = obj["thread"]
         if (thread["subject"]==None or thread["list"]==None):
             return None
-        else:
-            return thread
+        return thread
+        
+    def parse_date(self, date):
+        if (date is None):
+            return None
+        
+        # yesterday
+        regex = re.compile("^yesterday\s*(\d*):(\d*)\spm",re.IGNORECASE)
+        r = regex.search(date)
+        if (r):
+            hour = r.group(1)
+            minute = r.group(2)
+            d = datetime.today()
+            d = d - timedelta(days = 1)
+            d.replace(hour = hour, minute = minute)
+            return d
+            
+        # today
+        regex = re.compile("^today\s*(\d*):(\d*)\spm",re.IGNORECASE)
+        r = regex.search(date)
+        if (r):
+            hour = r.group(1)
+            minute = r.group(2)
+            d = datetime.today()
+            #d = d - timedelta(days = 1)
+            d.replace(hour = hour, minute = minute)
+            return d
+        
+        # n days ago
+        regex = re.compile("^(\d*)\sdays\sago",re.IGNORECASE)
+        r = regex.search(date)
+        if (r):
+            days = r.group(1)
+            d = datetime.now()
+            d = d - timedelta(days = int(days))
+            return d
+         
+        return datetime.strptime(date, '%b %d, %Y')
         
     def __request(self, uri, accept="application/json"):
         """
