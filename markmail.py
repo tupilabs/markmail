@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
-import datetime
-
 # LinkedMarkMail, an RDFizer for Mark Mail 
 #
 # Copyright (C) 2011 Sergio Fernández
@@ -83,14 +81,14 @@ class MarkMail:
             return d
             
         # today
-        regex = re.compile("^today\s*(\d*):(\d*)\spm",re.IGNORECASE)
+        regex = re.compile("^today\s*(\d*):(\d*)\s.m",re.IGNORECASE)
         r = regex.search(date)
         if (r):
             hour = r.group(1)
             minute = r.group(2)
             d = datetime.today()
             #d = d - timedelta(days = 1)
-            d.replace(hour = hour, minute = minute)
+            d = d.replace(hour = int(hour), minute = int(minute))
             return d
         
         # n days ago
