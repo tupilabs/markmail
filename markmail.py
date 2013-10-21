@@ -42,6 +42,7 @@ class MarkMail:
     def search(self, query, page=1, mode="json"):
         uri = "%s/results.xqy?q=%s&page=%d&mode=%s" % (self.base, query, page, mode)
         response = self.__request(uri).read()
+        response = response.replace('\t', '')
         obj = json.load(StringIO(response))
         #warnings.warn("This method is still fully unimplemented")
         return obj #FIXME
@@ -68,13 +69,15 @@ class MarkMail:
     def parse_date(self, date):
         if (date is None):
             return None
-        
+       
+        date = date.rstrip()
+ 
         # yesterday
-        regex = re.compile("^yesterday\s*(\d*):(\d*)\spm",re.IGNORECASE)
+        regex = re.compile("^yesterday\s+(\d+):(\d+)\s.m",re.IGNORECASE)
         r = regex.search(date)
         if (r):
-            hour = r.group(1)
-            minute = r.group(2)
+            hour = int(r.group(1))
+            minute = int(r.group(2))
             d = datetime.today()
             d = d - timedelta(days = 1)
             d.replace(hour = hour, minute = minute)
@@ -84,11 +87,11 @@ class MarkMail:
         regex = re.compile("^today\s*(\d*):(\d*)\s.m",re.IGNORECASE)
         r = regex.search(date)
         if (r):
-            hour = r.group(1)
-            minute = r.group(2)
+            hour = int(r.group(1))
+            minute = int(r.group(2))
             d = datetime.today()
             #d = d - timedelta(days = 1)
-            d = d.replace(hour = int(hour), minute = int(minute))
+            d = d.replace(hour = hour, minute = minute)
             return d
         
         # n days ago
