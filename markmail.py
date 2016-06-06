@@ -42,7 +42,7 @@ class MarkMail:
     def search(self, query, page=1, mode="json"):
         uri = "%s/results.xqy?q=%s&page=%d&mode=%s" % (self.base, query, page, mode)
         response = self.__request(uri).read()
-        response = response.replace('\t', '')
+        response = response.decode('utf8').replace('\t', '')
         obj = json.load(StringIO(response))
         #warnings.warn("This method is still fully unimplemented")
         return obj #FIXME
@@ -118,6 +118,7 @@ class MarkMail:
                     "User-Agent" : "swaml (http://swaml.berlios.de/; sergio@wikier.org)",
                     "Accept"     : accept
                   }
-        request = urllib.Request(uri, headers=headers)
-        return urllib.urlopen(request)
+        request = urllib.request.Request(uri, headers=headers)
+        return urllib.request.urlopen(request)
+
 
