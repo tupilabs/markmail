@@ -26,9 +26,9 @@ A simple python client for MarkMail hacky API
 Futher details at: http://pastebin.com/M5NnyEZ8
 """
 
-import urllib2
+import urllib
 import simplejson as json
-from StringIO import StringIO
+from io import StringIO
 from datetime import datetime, timedelta
 import re
 #import warnings
@@ -118,5 +118,6 @@ class MarkMail:
                     "User-Agent" : "swaml (http://swaml.berlios.de/; sergio@wikier.org)",
                     "Accept"     : accept
                   }
-        request = urllib2.Request(uri, headers=headers)
-        return urllib2.urlopen(request)
+        request = urllib.Request(uri, headers=headers)
+        return urllib.urlopen(request)
+
