@@ -81,6 +81,8 @@ class MarkMail:
             minute = int(r.group(2))
             d = datetime.utcnow()
             d = d - timedelta(days = 1)
+            d = d.replace(tzinfo=timezone('UTC'))
+            d = d.astimezone(tzinfo=timezone('America/Los_Angeles'))
             d = d.replace(hour = hour, minute = minute)
             return d
             
@@ -91,6 +93,8 @@ class MarkMail:
             hour = int(r.group(1))
             minute = int(r.group(2))
             d = datetime.utcnow()
+            d = d.replace(tzinfo=timezone('UTC'))
+            d = d.astimezone(tzinfo=timezone('America/Los_Angeles'))
             d = d.replace(hour = hour, minute = minute)
             return d
         
@@ -101,6 +105,8 @@ class MarkMail:
             days = r.group(1)
             d = datetime.utcnow()
             d = d - timedelta(days = int(days))
+            d = d.replace(tzinfo=timezone('UTC'))
+            d = d.astimezone(tzinfo=timezone('America/Los_Angeles'))
             return d
          
         return datetime.strptime(date, '%b %d, %Y')
