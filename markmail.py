@@ -109,7 +109,10 @@ class MarkMail:
             d = d.astimezone(tz=timezone('America/Los_Angeles'))
             return d
          
-        return datetime.strptime(date, '%b %d, %Y')
+        d = datetime.strptime(date, '%b %d, %Y')
+        d = d.replace(tzinfo=timezone('UTC'))
+        d = d.astimezone(tz=timezone('America/Los_Angeles'))
+        return d
         
     def __request(self, uri, accept="application/json"):
         """
