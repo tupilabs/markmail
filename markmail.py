@@ -30,6 +30,7 @@ import urllib
 import simplejson as json
 from io import StringIO
 from datetime import datetime, timedelta
+from pytz import timezone
 import re
 #import warnings
 
@@ -80,7 +81,7 @@ class MarkMail:
             minute = int(r.group(2))
             d = datetime.today()
             d = d - timedelta(days = 1)
-            d.replace(hour = hour, minute = minute)
+            d = d.replace(hour = hour, minute = minute)
             return d
             
         # today
@@ -90,7 +91,6 @@ class MarkMail:
             hour = int(r.group(1))
             minute = int(r.group(2))
             d = datetime.today()
-            #d = d - timedelta(days = 1)
             d = d.replace(hour = hour, minute = minute)
             return d
         
@@ -99,7 +99,7 @@ class MarkMail:
         r = regex.search(date)
         if (r):
             days = r.group(1)
-            d = datetime.now()
+            d = datetime.today()
             d = d - timedelta(days = int(days))
             return d
          
