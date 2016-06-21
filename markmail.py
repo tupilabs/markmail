@@ -81,9 +81,10 @@ class MarkMail:
             minute = int(r.group(2))
             d = datetime.utcnow()
             d = d - timedelta(days = 1)
+            d = d.replace(hour = hour, minute = minute)
             d = d.replace(tzinfo=timezone('UTC'))
             d = d.astimezone(tz=timezone('America/Los_Angeles'))
-            d = d.replace(hour = hour, minute = minute)
+            d = datetime.strptime(d.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
             return d
             
         # today
@@ -93,9 +94,10 @@ class MarkMail:
             hour = int(r.group(1))
             minute = int(r.group(2))
             d = datetime.utcnow()
+            d = d.replace(hour = hour, minute = minute)
             d = d.replace(tzinfo=timezone('UTC'))
             d = d.astimezone(tz=timezone('America/Los_Angeles'))
-            d = d.replace(hour = hour, minute = minute)
+            d = datetime.strptime(d.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
             return d
         
         # n days ago
@@ -107,11 +109,14 @@ class MarkMail:
             d = d - timedelta(days = int(days))
             d = d.replace(tzinfo=timezone('UTC'))
             d = d.astimezone(tz=timezone('America/Los_Angeles'))
+            d = datetime.strptime(d.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
             return d
-         
+        
+        # default parse date string
         d = datetime.strptime(date, '%b %d, %Y')
         d = d.replace(tzinfo=timezone('UTC'))
         d = d.astimezone(tz=timezone('America/Los_Angeles'))
+        d = datetime.strptime(d.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')
         return d
         
     def __request(self, uri, accept="application/json"):
